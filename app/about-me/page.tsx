@@ -13,9 +13,11 @@ export default function AboutPage() {
     <div className="mx-auto w-full max-w-[1800px] px-6 pb-20">
       <section className="grid grid-cols-1 gap-12 pt-8 lg:grid-cols-2">
         <h1 className="max-w-xl text-[36px] leading-[1.12] tracking-[-0.02em] md:text-[48px] md:leading-[1.15]">
-          I love traveling, creating,
+          I love traveling,
           <br />
-          and making complicated things feel <span className="italic">simple</span>.
+          and making complicated
+          <br />
+          things feel <span className="italic">simple</span>
         </h1>
         <div className="max-w-xl space-y-5 text-[16px] leading-relaxed text-foreground-light">
           <p>{about.lede}</p>
