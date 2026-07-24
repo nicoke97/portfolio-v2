@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityCalendar } from "react-activity-calendar";
 
 import {
+  ACTIVITY_START,
   cursorActivity,
   cursorContributionDays,
   cursorOranges,
@@ -19,51 +20,6 @@ const cursorLabels = {
   legend: { less: "Less", more: "More" },
 };
 
-const DESKTOP_BLOCK = 11;
-const DESKTOP_MARGIN = 3;
-const DESKTOP_FONT = 12;
-
-function weekCount(data: { date: string }[]) {
-  if (data.length === 0) return 53;
-  const first = new Date(`${data[0].date}T00:00:00`);
-  const last = new Date(`${data[data.length - 1].date}T00:00:00`);
-  const pad = first.getDay();
-  const days = Math.round((last.getTime() - first.getTime()) / 86_400_000) + 1;
-  return Math.ceil((days + pad) / 7);
-}
-
-function fitCalendar(width: number, weeks: number) {
-  const natural = weeks * (DESKTOP_BLOCK + DESKTOP_MARGIN) - DESKTOP_MARGIN;
-  if (width <= 0 || weeks <= 0 || width >= natural) {
-    return { blockSize: DESKTOP_BLOCK, blockMargin: DESKTOP_MARGIN, fontSize: DESKTOP_FONT };
-  }
-
-  const scale = width / natural;
-  return {
-    blockSize: DESKTOP_BLOCK * scale,
-    blockMargin: DESKTOP_MARGIN * scale,
-    fontSize: Math.max(8, Math.round(DESKTOP_FONT * scale)),
-  };
-}
-
-function useFitCalendar(weeks: number) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [fit, setFit] = useState(() => fitCalendar(900, weeks));
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const update = () => setFit(fitCalendar(el.clientWidth, weeks));
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    update();
-    return () => observer.disconnect();
-  }, [weeks]);
-
-  return { ref, ...fit };
-}
-
 function levelFor(count: number, max: number): 0 | 1 | 2 | 3 | 4 {
   if (count <= 0) return 0;
   if (count >= max * 0.75) return 4;
@@ -74,8 +30,7 @@ function levelFor(count: number, max: number): 0 | 1 | 2 | 3 | 4 {
 
 function seededGithub(): GithubContributions {
   const end = new Date();
-  const start = new Date(end);
-  start.setFullYear(start.getFullYear() - 1);
+  const start = new Date(`${ACTIVITY_START}T00:00:00`);
   const contributions: GithubContributions["contributions"] = [];
   const cursor = new Date(start);
   cursor.setHours(0, 0, 0, 0);
@@ -98,15 +53,20 @@ function seededGithub(): GithubContributions {
 
 export function GitHubActivity() {
   const [github, setGithub] = useState<GithubContributions>(seededGithub);
-  const weeks = Math.max(weekCount(github.contributions), weekCount(cursorContributionDays));
-  const { ref, blockSize, blockMargin, fontSize } = useFitCalendar(weeks);
 
   useEffect(() => {
     let cancelled = false;
     fetch("/api/github/contributions")
       .then((response) => (response.ok ? response.json() : null))
       .then((payload: GithubContributions | null) => {
-        if (!cancelled && payload?.total) setGithub(payload);
+        if (cancelled || !payload?.contributions.length) return;
+        const contributions = payload.contributions.filter((day) => day.date >= ACTIVITY_START);
+        if (!contributions.length) return;
+        setGithub({
+          ...payload,
+          contributions,
+          total: contributions.reduce((sum, day) => sum + day.count, 0),
+        });
       })
       .catch(() => {});
     return () => {
@@ -120,64 +80,58 @@ export function GitHubActivity() {
         <h4>Activity</h4>
       </div>
 
-      <div className="activity-fit mx-auto w-full max-w-[900px] pb-4">
-        <div className="border border-foreground/10 px-3 py-4 sm:px-5 sm:py-5">
-          <div className="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[12px] font-medium tracking-[0.08em] text-foreground-light uppercase">
-                GitHub
-              </p>
-              <p className="mt-1 text-[24px] font-medium tracking-tight tabular-nums text-foreground sm:text-[28px]">
-                {github.total.toLocaleString()}
-                <span className="ml-2 text-[13px] font-medium tracking-normal text-foreground-light">
-                  contributions this year
-                </span>
-              </p>
-            </div>
-          </div>
-
-          <div ref={ref} className="w-full min-w-0">
+      <div className="flex flex-col gap-6 pb-4 sm:flex-row">
+        {/* GitHub */}
+        <div className="flex-1 border border-foreground/10 px-4 py-4 sm:px-5 sm:py-5">
+          <p className="text-[12px] font-medium tracking-[0.08em] text-foreground-light uppercase">
+            GitHub
+          </p>
+          <p className="mt-1 mb-4 text-[22px] font-medium tracking-tight tabular-nums text-foreground">
+            {github.total.toLocaleString()}
+            <span className="ml-2 text-[13px] font-medium tracking-normal text-foreground-light">
+              contributions this year
+            </span>
+          </p>
+          <div className="overflow-x-auto">
             <ActivityCalendar
               data={github.contributions}
               colorScheme="light"
               theme={githubTheme}
-              blockSize={blockSize}
-              blockMargin={blockMargin}
-              fontSize={fontSize}
+              blockSize={11}
+              blockMargin={3}
+              blockRadius={2}
+              fontSize={12}
               showTotalCount={false}
               showWeekdayLabels={false}
             />
           </div>
         </div>
 
-        <div className="mt-6 border border-foreground/10 px-3 py-4 sm:px-5 sm:py-5">
-          <div className="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[12px] font-medium tracking-[0.08em] text-foreground-light uppercase">
-                Cursor
-              </p>
-              <p className="mt-1 text-[24px] font-medium tracking-tight tabular-nums text-primary sm:text-[28px]">
-                {cursorActivity.lineEdits.toLocaleString()}
-                <span className="ml-2 text-[13px] font-medium tracking-normal text-foreground-light">
-                  AI line edits
-                </span>
-              </p>
-            </div>
-            <p className="text-[12px] text-foreground-light">
-              Most active {cursorActivity.mostActiveMonth} · {cursorActivity.longestStreakDays}d
-              longest streak
-            </p>
-          </div>
-
-          <div className="w-full min-w-0">
+        {/* Cursor */}
+        <div className="flex-1 border border-foreground/10 px-4 py-4 sm:px-5 sm:py-5">
+          <p className="text-[12px] font-medium tracking-[0.08em] text-foreground-light uppercase">
+            Cursor
+          </p>
+          <p className="mt-1 text-[22px] font-medium tracking-tight tabular-nums text-primary">
+            {cursorActivity.lineEdits.toLocaleString()}
+            <span className="ml-2 text-[13px] font-medium tracking-normal text-foreground-light">
+              AI line edits
+            </span>
+          </p>
+          <p className="mb-4 text-[12px] text-foreground-light">
+            Most active {cursorActivity.mostActiveMonth} · {cursorActivity.longestStreakDays}d longest streak
+          </p>
+          <div className="overflow-x-auto">
             <ActivityCalendar
               data={cursorContributionDays}
               colorScheme="light"
               theme={cursorTheme}
               labels={cursorLabels}
-              blockSize={blockSize}
-              blockMargin={blockMargin}
-              fontSize={fontSize}
+              blockSize={11}
+              blockMargin={3}
+              blockRadius={2}
+              fontSize={12}
+              showTotalCount={false}
               showWeekdayLabels={false}
             />
           </div>

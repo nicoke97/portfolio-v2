@@ -285,22 +285,6 @@ h4 {
   font-family: var(--font-plex-sans), "IBM Plex Sans", sans-serif;
 }
 
-.activity-fit .react-activity-calendar {
-  width: 100% !important;
-  max-width: 100%;
-}
-
-.activity-fit .react-activity-calendar__scroll-container {
-  overflow: hidden !important;
-  max-width: 100%;
-}
-
-.activity-fit .react-activity-calendar__calendar {
-  width: 100% !important;
-  height: auto !important;
-  max-width: 100%;
-}
-
 ::selection {
   background: color-mix(in srgb, var(--primary) 28%, transparent);
   color: var(--foreground);
