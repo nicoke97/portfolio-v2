@@ -18,6 +18,9 @@ export const site = {
 export const githubGreens = ["#eceae6", "#9be9a8", "#40c463", "#30a14e", "#216e39"] as const;
 export const cursorOranges = ["#eceae6", "#e8c4b0", "#d4926e", "#be704c", "#8f4a2e"] as const;
 
+/** First day shown on both activity calendars. Nothing earlier is worth showing. */
+export const ACTIVITY_START = "2026-04-01";
+
 /** Authored commits on default branches, used when GitHub hides private activity. */
 export const githubCommitDays: Record<string, number> = {
   "2026-05-06": 1,
@@ -148,7 +151,15 @@ function eachIsoDay(start: string, end: string) {
   return days;
 }
 
-export const cursorContributionDays = eachIsoDay("2025-08-31", "2026-09-04").map((date) => {
+function todayIso() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export const cursorContributionDays = eachIsoDay(ACTIVITY_START, todayIso()).map((date) => {
   const level = CURSOR_LEVEL[date] ?? 0;
   return {
     date,
@@ -663,7 +674,7 @@ export const workProjects = projects.filter((project) => project.page === "work"
 export const funProjects = projects.filter((project) => project.page === "fun");
 
 export const about = {
-  headline: "I love traveling, creating, and making complicated things feel simple.",
+  headline: "I love traveling, and making complicated things feel simple",
   lede: "I started out studying Biomedical Engineering and somehow found my way into software. Since then I've worked across API calls, CI/CD Modernization, UI/UX design and whatever else needed figuring out.",
   open: "I'm always up for a good problem, a good team, or a good idea.",
   personas: [
@@ -716,7 +727,7 @@ export const about = {
 
 export const copy = {
   workHeadline: "I'm Nico, a full-stack software engineer who loves UX.",
-  funHeadline: "I live for streamlining processes, creating tools that simplify workflows, and videogames!",
+  funHeadline: "I live for creating",
   funLede:
     "Engineering is the day job. After hours I build the tools I wish existed.",
 };
