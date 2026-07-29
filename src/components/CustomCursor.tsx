@@ -26,13 +26,14 @@ export function CustomCursor() {
     let timer: number | undefined;
 
     const onMove = (event: MouseEvent) => {
+      const hidePointer = Boolean((event.target as HTMLElement | null)?.closest("[data-hide-pointer]"));
       const target = (event.target as HTMLElement | null)?.closest("[data-cursor]");
-      const label = target?.getAttribute("data-cursor") ?? "";
+      const label = hidePointer ? "" : (target?.getAttribute("data-cursor") ?? "");
       setCursor({
         x: event.clientX,
         y: event.clientY,
         label,
-        visible: true,
+        visible: !hidePointer,
       });
     };
 
