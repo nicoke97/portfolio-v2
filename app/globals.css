@@ -55,7 +55,9 @@ h4 {
 
   a,
   button,
-  [data-cursor] {
+  [data-cursor],
+  [data-hide-pointer],
+  [data-hide-pointer] * {
     cursor: none;
   }
 
@@ -107,6 +109,158 @@ h4 {
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes cover-from {
+  0%,
+  18% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  42%,
+  72% {
+    opacity: 0.32;
+    transform: translateX(-6px);
+  }
+  90%,
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cover-to {
+  0%,
+  18% {
+    opacity: 0.32;
+    transform: translateX(6px);
+    color: var(--foreground);
+  }
+  42%,
+  72% {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--primary);
+  }
+  90%,
+  100% {
+    opacity: 0.32;
+    transform: translateX(6px);
+    color: var(--foreground);
+  }
+}
+
+@keyframes cover-arrow-line {
+  0%,
+  12% {
+    stroke-dashoffset: 48;
+  }
+  36%,
+  78% {
+    stroke-dashoffset: 0;
+  }
+  94%,
+  100% {
+    stroke-dashoffset: 48;
+  }
+}
+
+@keyframes cover-arrow-head {
+  0%,
+  22% {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  38%,
+  78% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+}
+
+.cover-from {
+  animation: cover-from 7s ease-in-out infinite;
+}
+
+.cover-to {
+  animation: cover-to 7s ease-in-out infinite;
+}
+
+.cover-arrow-line {
+  stroke-dasharray: 48;
+  animation: cover-arrow-line 7s ease-in-out infinite;
+}
+
+.cover-arrow-head {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cover-arrow-head 7s ease-in-out infinite;
+}
+
+.cover-scene-framework-core .cover-from,
+.cover-scene-framework-core .cover-to,
+.cover-scene-framework-core .cover-arrow-line,
+.cover-scene-framework-core .cover-arrow-head {
+  animation-delay: 1.1s;
+}
+
+.cover-scene-tfs-github .cover-from,
+.cover-scene-tfs-github .cover-to,
+.cover-scene-tfs-github .cover-arrow-line,
+.cover-scene-tfs-github .cover-arrow-head {
+  animation-delay: 2.2s;
+}
+
+.group:hover .cover-from,
+.group:hover .cover-to,
+.group:hover .cover-arrow-line,
+.group:hover .cover-arrow-head {
+  animation-play-state: paused;
+}
+
+.group:hover .cover-from {
+  opacity: 0.38;
+  transform: none;
+}
+
+.group:hover .cover-to {
+  opacity: 1;
+  transform: none;
+  color: var(--primary);
+}
+
+.group:hover .cover-arrow-line {
+  stroke-dashoffset: 0;
+}
+
+.group:hover .cover-arrow-head {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-from,
+  .cover-to,
+  .cover-arrow-line,
+  .cover-arrow-head {
+    animation: none !important;
+  }
+
+  .cover-from,
+  .cover-to,
+  .cover-arrow-head {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cover-arrow-line {
+    stroke-dashoffset: 0;
   }
 }
 
