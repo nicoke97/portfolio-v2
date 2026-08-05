@@ -30,7 +30,7 @@ export default function WorkPage() {
         <h4>Work Projects</h4>
       </div>
 
-      <section className="grid grid-cols-1 gap-x-6 gap-y-12 pb-24 md:grid-cols-2">
+      <section className="grid grid-cols-1 gap-x-6 gap-y-12 pb-24 md:grid-cols-3">
         {workProjects.map((project) => (
           <ProjectCard key={project.slug} project={project} priority={project.slug === "slabhq"} />
         ))}

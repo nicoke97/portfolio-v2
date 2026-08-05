@@ -29,10 +29,10 @@ function reply(input: string): string {
     return `Best email is ${site.email}. LinkedIn is ${site.linkedin}. He is based in ${site.location}.`;
   }
   if (q.includes("project") || q.includes("slab") || q.includes("falsify") || q.includes("python") || q.includes("rankine")) {
-    return "SlabHQ is Pokémon TCG seller infrastructure, live in Mexico. Falsify is a Unity forgery tycoon aimed at January 2027. PythonOS is Kumon for Python. Rankine OS is a thesis bench for his brother's energy work.";
+    return "SlabHQ is Pokémon TCG seller infrastructure, live in Mexico. Falsify is a Unity forgery tycoon aimed at January 2027. Codenda is Kumon for Python. Rankine OS is a thesis bench for his brother's energy work.";
   }
   if (q.includes("work") || q.includes("solera") || q.includes("experience") || q.includes("job")) {
-    return "Most recently Software Development Engineer II at Solera — .NET modernization, TFS to GitHub, 15+ microservices, mentoring, and client incidents. Before that SDE I, HPEL, Odoo support, and biomedical engineering at Star Médica.";
+    return "Most recently Software Development Engineer II at Solera — .NET modernization, TFS to GitHub, mentoring, and client incidents. Before that SDE I, HPEL, Odoo support, and biomedical engineering at Star Médica.";
   }
   if (q.includes("stack") || q.includes("tech") || q.includes("language")) {
     return "Day-to-day: C#, .NET, TypeScript, React, Next.js, SQL. Also Python, Docker, Unity, Cursor, and GitHub Copilot. Spanish and English are native; Italian is conversational.";
