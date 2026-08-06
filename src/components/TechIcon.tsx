@@ -8,6 +8,29 @@ function Icon({ children }: { children: ReactNode }) {
   );
 }
 
+function AgentCube({ children }: { children: ReactNode }) {
+  return (
+    <Icon>
+      <path d="M12 2.8 21 8 12 13.2 3 8Z" fill="currentColor" opacity="0.2" />
+      <path d="M3 8 12 13.2v8L3 16.2Z" fill="currentColor" opacity="0.1" />
+      <path d="M21 8 12 13.2v8L21 16.2Z" fill="currentColor" opacity="0.28" />
+      <path
+        d="M12 2.8 21 8v8.2L12 21.2 3 16.2V8L12 2.8z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 8 12 13.2 21 8M12 13.2v8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      {children}
+    </Icon>
+  );
+}
+
 /** Monochrome marks — inherit text color via currentColor. */
 export function TechIcon({ name }: { name: string }) {
   switch (name) {
@@ -233,35 +256,30 @@ export function TechIcon({ name }: { name: string }) {
     case "Cursor":
       return (
         <Icon>
-          <path
-            d="M6 3.5v17l5-5 2.8 6.4 3.4-1.5-2.8-6.4L20.5 13.5 6 3.5z"
-            fill="currentColor"
-          />
+          {/* Official Cursor cube mark, scaled into the 24 viewBox */}
+          <g transform="translate(1.8 0.83) scale(0.04094)">
+            <path
+              fill="currentColor"
+              d="m466.383 137.073-206.469-119.2034c-6.63-3.8287-14.811-3.8287-21.441 0l-206.4586 119.2034c-5.5734 3.218-9.0144 9.169-9.0144 15.615v240.375c0 6.436 3.441 12.397 9.0144 15.615l206.4686 119.203c6.63 3.829 14.811 3.829 21.441 0l206.468-119.203c5.574-3.218 9.015-9.17 9.015-15.615v-240.375c0-6.436-3.441-12.397-9.015-15.615zm-12.969 25.25-199.316 345.223c-1.347 2.326-4.904 1.376-4.904-1.319v-226.048c0-4.517-2.414-8.695-6.33-10.963l-195.7577-113.019c-2.3263-1.347-1.3764-4.905 1.3182-4.905h398.6305c5.661 0 9.199 6.136 6.368 11.041h-.009z"
+            />
+          </g>
         </Icon>
       );
     case "GitHub Copilot":
       return (
-        <Icon>
-          <path
-            d="M12 4c-3 0-5.5 2-5.5 4.6V11c0 1.2-1.2 1.8-1.8 2.4 1.5.6 2.4 2.1 2.4 3.6 0 2.2 2 3.8 4.9 3.8s4.9-1.6 4.9-3.8c0-1.5.9-3 2.4-3.6-.6-.6-1.8-1.2-1.8-2.4V8.6C17.5 6 15 4 12 4z"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinejoin="round"
-          />
-          <circle cx="10.2" cy="10" r="1" fill="currentColor" />
-          <circle cx="13.8" cy="10" r="1" fill="currentColor" />
-        </Icon>
+        <AgentCube>
+          <circle cx="14.15" cy="13.55" r="1.1" fill="currentColor" />
+          <circle cx="17.2" cy="12.5" r="1.1" fill="currentColor" />
+        </AgentCube>
       );
     case "Claude Code":
       return (
-        <Icon>
+        <AgentCube>
           <path
-            d="M12 3.5 13.6 9.5h6.4l-5.2 3.8 2 6.2L12 16.2 7.2 19.5l2-6.2-5.2-3.8h6.4L12 3.5z"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinejoin="round"
+            d="M15.65 10.05 16.7 12.3 19.05 13.1 16.7 13.9 15.65 16.15 14.6 13.9 12.25 13.1 14.6 12.3Z"
+            fill="currentColor"
           />
-        </Icon>
+        </AgentCube>
       );
     default:
       return (
