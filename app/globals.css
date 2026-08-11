@@ -273,16 +273,16 @@ h4 {
   display: none;
 }
 
-.activity-fill .react-activity-calendar__legend-month,
-.activity-fill .react-activity-calendar__legend-weekday,
-.activity-fill .react-activity-calendar footer,
-.activity-fill .react-activity-calendar__count,
-.react-activity-calendar__legend-month,
-.react-activity-calendar__legend-weekday,
-.react-activity-calendar footer,
-.react-activity-calendar__count {
+.activity-calendar .react-activity-calendar {
   color: var(--foreground-light);
   font-family: var(--font-plex-sans), "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.activity-calendar .react-activity-calendar rect {
+  stroke: none !important;
 }
 
 ::selection {
