@@ -4,7 +4,9 @@ import { NicoName } from "@/components/NicoName";
 import { OnekoPlayground } from "@/components/OnekoPlayground";
 import { ProjectCard } from "@/components/ProjectCard";
 import { StackSection } from "@/components/StackSection";
-import { workProjects } from "@/data/site";
+import { getProject, workProjects } from "@/data/site";
+
+const slabhq = getProject("slabhq");
 
 export default function WorkPage() {
   return (
@@ -13,14 +15,11 @@ export default function WorkPage() {
         <OnekoPlayground />
         <div className="flex w-full flex-col gap-6">
           <h1 className="leading-[1.1] tracking-[-0.02em] text-foreground">
-            <span className="inline lg:block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
-              I&apos;m <NicoName />, a full-stack software engineer{" "}
+            <span className="mb-2 block text-foreground-light" style={{ fontSize: "clamp(14px, 1.3vw, 20px)" }}>
+              C# / .NET · APIs · marketplace integrations.
             </span>
-            <span className="inline lg:block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
-              who <span className="italic" data-easter="slab">loves</span> UX.
-            </span>
-            <span className="block mt-1" style={{ fontSize: "clamp(18px, 1.8vw, 28px)" }}>
-              (and the systems behind it)
+            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
+              I&apos;m <NicoName />, a full-stack software engineer.
             </span>
           </h1>
           <ExperienceList className="mt-4" />

@@ -37,27 +37,6 @@ export function NicoName() {
         setAuto(false);
       }}
     >
-      <svg
-        viewBox="37 52 461 371"
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-full left-0 w-[120%] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-      >
-        <defs>
-          <filter id="colorize-nico-hover">
-            <feColorMatrix
-              type="matrix"
-              values="0 0 0 0 0.745 0 0 0 0 0.439 0 0 0 0 0.298 -0.333 -0.333 -0.333 1 0"
-            />
-          </filter>
-        </defs>
-        <image
-          href="/projects/drawing/nicoke_no_bck.png"
-          width="500"
-          height="500"
-          preserveAspectRatio="xMidYMid meet"
-          filter="url(#colorize-nico-hover)"
-        />
-      </svg>
       <span className="inline-flex transition-colors duration-200 group-hover:text-primary">
         <span className="nico-n inline-block">N</span>
         <span className="nico-i inline-block">i</span>
