@@ -1,37 +1,70 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ActivityCalendar, type Activity } from "react-activity-calendar";
+import { ActivityCalendar } from "react-activity-calendar";
 
 import {
   cursorActivity,
   cursorContributionDays,
   cursorOranges,
+  githubCommitDays,
   githubGreens,
 } from "@/data/site";
+import type { GithubContributions } from "@/lib/github-contributions";
 
 const githubTheme = { light: [...githubGreens] };
 const cursorTheme = { light: [...cursorOranges] };
-const githubLabels = { totalCount: "{{count}} contributions on GitHub in the last year" };
 const cursorLabels = {
   totalCount: "Local AI edits",
   legend: { less: "Less", more: "More" },
 };
 
+function levelFor(count: number, max: number): 0 | 1 | 2 | 3 | 4 {
+  if (count <= 0) return 0;
+  if (count >= max * 0.75) return 4;
+  if (count >= max * 0.5) return 3;
+  if (count >= max * 0.25) return 2;
+  return 1;
+}
+
+function seededGithub(): GithubContributions {
+  const end = new Date();
+  const start = new Date(end);
+  start.setFullYear(start.getFullYear() - 1);
+  const contributions: GithubContributions["contributions"] = [];
+  const cursor = new Date(start);
+  cursor.setHours(0, 0, 0, 0);
+  while (cursor <= end) {
+    const year = cursor.getFullYear();
+    const month = String(cursor.getMonth() + 1).padStart(2, "0");
+    const day = String(cursor.getDate()).padStart(2, "0");
+    const date = `${year}-${month}-${day}`;
+    contributions.push({ date, count: githubCommitDays[date] ?? 0, level: 0 });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  const max = Math.max(1, ...contributions.map((day) => day.count));
+  const leveled = contributions.map((day) => ({ ...day, level: levelFor(day.count, max) }));
+  return {
+    total: leveled.reduce((sum, day) => sum + day.count, 0),
+    contributions: leveled,
+    includesPrivate: true,
+  };
+}
+
 export function GitHubActivity() {
-  const [data, setData] = useState<Activity[] | null>(null);
-  const [total, setTotal] = useState(0);
+  const [github, setGithub] = useState<GithubContributions>(seededGithub);
 
   useEffect(() => {
+    let cancelled = false;
     fetch("/api/github/contributions")
-      .then((response) => response.json())
-      .then((payload: { total: number; contributions: Activity[] }) => {
-        setData(payload.contributions);
-        setTotal(payload.total);
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: GithubContributions | null) => {
+        if (!cancelled && payload?.total) setGithub(payload);
       })
-      .catch(() => {
-        setData([]);
-      });
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -49,7 +82,7 @@ export function GitHubActivity() {
                 GitHub
               </p>
               <p className="mt-1 text-[28px] font-medium tracking-tight tabular-nums text-foreground">
-                {total.toLocaleString()}
+                {github.total.toLocaleString()}
                 <span className="ml-2 text-[13px] font-medium tracking-normal text-foreground-light">
                   contributions this year
                 </span>
@@ -58,19 +91,15 @@ export function GitHubActivity() {
           </div>
 
           <div className="no-scrollbar flex justify-center overflow-x-auto">
-            {data ? (
-              <ActivityCalendar
-                data={data}
-                colorScheme="light"
-                theme={githubTheme}
-                labels={githubLabels}
-                blockSize={11}
-                blockMargin={3}
-                fontSize={12}
-              />
-            ) : (
-              <div className="h-28 w-full max-w-[800px] animate-pulse bg-foreground/[0.04]" />
-            )}
+            <ActivityCalendar
+              data={github.contributions}
+              colorScheme="light"
+              theme={githubTheme}
+              blockSize={11}
+              blockMargin={3}
+              fontSize={12}
+              showTotalCount={false}
+            />
           </div>
         </div>
 
