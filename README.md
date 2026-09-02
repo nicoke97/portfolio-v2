@@ -1,13 +1,14 @@
-# Portfolio 2v
+# Portfolio v2
 
 Personal site for Nico Kelley — second version.
 
 ## Stack
 
-- Next.js
-- React
-- Tailwind CSS
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS v4
 - TypeScript
+- Geist + Crimson Pro
 
 ## Dev
 
@@ -15,3 +16,5 @@ Personal site for Nico Kelley — second version.
 npm install
 npm run dev
 ```
+
+Open http://localhost:3000

@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-foreground-light: var(--foreground-light);
+  --color-primary: var(--primary);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-serif: var(--font-plex-serif);
+}
+
+:root {
+  --background: #faf9f7;
+  --foreground: #32404f;
+  --foreground-light: #32404f95;
+  --primary: #be704c;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-family: var(--font-plex-sans), "IBM Plex Sans", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+.font-serif {
+  font-family: var(--font-plex-serif), "IBM Plex Serif", Georgia, serif;
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground-light);
+  line-height: 1.3;
+}
+
+@media (pointer: fine) {
+  html,
+  body {
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><path d='M3 1L3 14L6 10L8.5 16.5L10.5 15.5L8 9L13 9Z' fill='%23be704c'/></svg>") 3 1, auto;
+  }
+
+  a,
+  button,
+  [data-cursor] {
+    cursor: none;
+  }
+
+  input[type="range"] {
+    cursor: ew-resize;
+  }
+
+  .cursor-donut,
+  a .cursor-donut,
+  a.cursor-donut {
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='5' fill='none' stroke='%23be704c' stroke-width='1.5'/></svg>") 8 8, auto !important;
+  }
+}
+
+@keyframes nico-n {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  35%       { transform: translate(-2px, -6px) rotate(-4deg); }
+  70%       { transform: translate(1px, -3px) rotate(1deg); }
+}
+@keyframes nico-i {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  40%       { transform: translate(2px, -7px) rotate(5deg); }
+  75%       { transform: translate(-1px, -2px) rotate(-2deg); }
+}
+@keyframes nico-c {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  30%       { transform: translate(2px, -5px) rotate(3deg); }
+  65%       { transform: translate(-1px, -8px) rotate(-3deg); }
+}
+@keyframes nico-o {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  45%       { transform: translate(-2px, -6px) rotate(-4deg); }
+  80%       { transform: translate(1px, -2px) rotate(3deg); }
+}
+
+.group:hover .nico-n { animation: nico-n 0.7s  ease-in-out 1 forwards; animation-delay: 0s;     }
+.group:hover .nico-i { animation: nico-i 0.65s ease-in-out 1 forwards; animation-delay: 0.08s; }
+.group:hover .nico-c { animation: nico-c 0.75s ease-in-out 1 forwards; animation-delay: 0.16s; }
+.group:hover .nico-o { animation: nico-o 0.68s ease-in-out 1 forwards; animation-delay: 0.24s; }
+
+@keyframes underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--foreground);
+}
