@@ -11,8 +11,8 @@ import { useChat } from "./ChatProvider";
 
 const nav = [
   { href: "/", label: "Work" },
-  { href: "/fun", label: "Nerd Stuff" },
-  { href: "/about", label: "About Me" },
+  { href: "/nerd-stuff", label: "Nerd Stuff" },
+  { href: "/about-me", label: "About Me" },
 ];
 
 export function Header() {
@@ -27,7 +27,7 @@ export function Header() {
     : undefined;
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/" || projectPage === "work";
-    if (href === "/fun") return pathname.startsWith("/fun") || projectPage === "fun";
+    if (href === "/nerd-stuff") return pathname.startsWith("/nerd-stuff") || projectPage === "fun";
     return pathname.startsWith(href);
   };
 

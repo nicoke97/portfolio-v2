@@ -22,7 +22,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <div className="mx-auto flex w-full max-w-[1800px] gap-10 px-6 pt-8 pb-20 lg:pt-12">
       <aside className="sticky top-8 hidden h-fit w-52 shrink-0 flex-col gap-3 lg:flex">
-        <Link href={project.page === "fun" ? "/fun" : "/"} className="mb-4 flex items-center gap-2" data-cursor="back">
+        <Link href={project.page === "fun" ? "/nerd-stuff" : "/"} className="mb-4 flex items-center gap-2" data-cursor="back">
           <ArrowLeft className="size-3.5" />
           <h4 className="hover:!text-primary">Back</h4>
         </Link>
@@ -34,7 +34,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </aside>
 
       <article className="min-w-0 flex-1">
-        <Link href={project.page === "fun" ? "/fun" : "/"} className="mb-6 flex items-center gap-2 lg:hidden" data-cursor="back">
+        <Link href={project.page === "fun" ? "/nerd-stuff" : "/"} className="mb-6 flex items-center gap-2 lg:hidden" data-cursor="back">
           <ArrowLeft className="size-3.5" />
           <h4>Back</h4>
         </Link>

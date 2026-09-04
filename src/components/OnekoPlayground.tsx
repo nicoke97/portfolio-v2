@@ -321,8 +321,8 @@ export function OnekoPlayground() {
             WebkitMaskPosition: `${-2 * SIZE}px 0px`,
           }}
         />
-        <p className="pointer-events-none absolute right-4 bottom-3 max-w-[20rem] text-right font-serif text-[14px] leading-snug text-foreground-light italic">
-          you can play with tomi, don&apos;t be shy, just click him.
+        <p className="pointer-events-none absolute right-4 bottom-3 max-w-[20rem] text-right font-serif text-[14px] leading-snug font-bold text-foreground-light">
+          to play with tomi, click him.
         </p>
       </div>
     </div>

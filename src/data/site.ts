@@ -14,6 +14,113 @@ export const site = {
   chatName: "NicoGPT",
 };
 
+/** Empty → hot cells for contribution graphs on the light cream background. */
+export const githubGreens = ["#eceae6", "#9be9a8", "#40c463", "#30a14e", "#216e39"] as const;
+export const cursorOranges = ["#eceae6", "#e8c4b0", "#d4926e", "#be704c", "#8f4a2e"] as const;
+
+export const cursorActivity = {
+  lineEdits: 6_583_640,
+  mostActiveMonth: "June",
+  mostActiveDay: "2026-06-21",
+  longestStreakDays: 15,
+  currentStreakDays: 2,
+};
+
+const CURSOR_LEVEL: Record<string, 1 | 2 | 3 | 4> = {
+  "2026-05-06": 2,
+  "2026-05-07": 2,
+  "2026-05-08": 2,
+  "2026-05-09": 2,
+  "2026-05-10": 2,
+  "2026-05-11": 2,
+  "2026-05-12": 2,
+  "2026-05-13": 2,
+  "2026-05-14": 2,
+  "2026-05-16": 1,
+  "2026-05-17": 3,
+  "2026-05-18": 3,
+  "2026-05-19": 3,
+  "2026-05-20": 3,
+  "2026-05-21": 3,
+  "2026-05-22": 3,
+  "2026-05-23": 2,
+  "2026-05-25": 2,
+  "2026-05-26": 2,
+  "2026-05-27": 2,
+  "2026-05-28": 2,
+  "2026-05-29": 2,
+  "2026-05-30": 2,
+  "2026-06-02": 2,
+  "2026-06-03": 3,
+  "2026-06-04": 3,
+  "2026-06-06": 2,
+  "2026-06-07": 2,
+  "2026-06-08": 2,
+  "2026-06-13": 3,
+  "2026-06-14": 3,
+  "2026-06-15": 3,
+  "2026-06-16": 3,
+  "2026-06-17": 3,
+  "2026-06-18": 3,
+  "2026-06-19": 3,
+  "2026-06-20": 3,
+  "2026-06-21": 4,
+  "2026-06-22": 3,
+  "2026-06-23": 3,
+  "2026-06-24": 3,
+  "2026-06-25": 3,
+  "2026-06-26": 3,
+  "2026-06-27": 3,
+  "2026-07-02": 2,
+  "2026-07-03": 2,
+  "2026-07-04": 2,
+  "2026-07-05": 2,
+  "2026-07-06": 2,
+  "2026-07-07": 2,
+  "2026-07-08": 2,
+  "2026-07-09": 2,
+  "2026-07-10": 2,
+  "2026-07-11": 2,
+  "2026-07-12": 2,
+  "2026-07-14": 1,
+  "2026-07-15": 1,
+  "2026-07-16": 1,
+  "2026-07-23": 1,
+  "2026-07-25": 1,
+  "2026-07-26": 1,
+  "2026-08-06": 1,
+  "2026-08-13": 1,
+  "2026-08-20": 1,
+  "2026-08-27": 2,
+  "2026-08-31": 2,
+  "2026-09-01": 2,
+};
+
+const CURSOR_COUNT = [0, 8_400, 28_000, 74_000, 186_000] as const;
+
+function eachIsoDay(start: string, end: string) {
+  const days: string[] = [];
+  const cursor = new Date(`${start}T00:00:00`);
+  const last = new Date(`${end}T00:00:00`);
+  while (cursor <= last) {
+    const year = cursor.getFullYear();
+    const month = String(cursor.getMonth() + 1).padStart(2, "0");
+    const day = String(cursor.getDate()).padStart(2, "0");
+    days.push(`${year}-${month}-${day}`);
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return days;
+}
+
+export const cursorContributionDays = eachIsoDay("2025-08-31", "2026-09-01").map((date) => {
+  const level = CURSOR_LEVEL[date] ?? 0;
+  return {
+    date,
+    count: CURSOR_COUNT[level],
+    level: level as 0 | 1 | 2 | 3 | 4,
+  };
+});
+
 export type Experience = {
   year: string;
   company: string;
@@ -146,7 +253,7 @@ export const projects: Project[] = [
   {
     slug: "elink-ebay",
     name: "eLink × eBay",
-    title: "eBay API integrations for eLink",
+    title: "eBay SOAP integrations for eLink",
     eyebrow: "eLink • Solera",
     page: "work",
     status: "Shipped",
@@ -154,29 +261,29 @@ export const projects: Project[] = [
     role: "Software Development Engineer I",
     timeline: "2023 — 2024",
     team: "Cross-functional",
-    skills: ["C#", ".NET", "eBay API", "REST", "SQL"],
+    skills: ["C#", ".NET", "SOAP", "eBay Trading API", "SQL"],
     aspect: "aspect-[16/10]",
     cover: {
       kind: "gradient",
       from: "#0f1f2e",
       to: "#c9dce8",
       accent: "#60a5fa",
-      overlay: "eBay API",
+      overlay: "SOAP",
     },
     overview: {
-      heading: "A marketplace integration is only as good as its edge cases.",
+      heading: "A SOAP call is only as reliable as how you handle the fault.",
       body: [
-        "eBay's API surface is vast. eLink needed a reliable bridge between their catalog and eBay's listing, order, and inventory systems — built to stay up under load and recover cleanly when eBay's endpoints didn't.",
-        "The interesting work was not the happy path. It was the rate limits, the partial failures, and the sync logic that had to be right even when the network wasn't.",
+        "eLink needed a durable bridge to eBay's Trading API — XML envelopes, auth tokens, and long-running SOAP calls for listings, orders, and inventory. Not a thin REST client: a service that could speak eBay's SOAP contracts under load.",
+        "The interesting work lived in the envelope. Timeouts mid-call. Partial Ack responses. Token expiry mid-batch. Rate limits that show up as SOAP faults instead of clean HTTP codes. Sync logic that had to stay correct when the wire didn't.",
       ],
     },
     sections: [
       {
-        id: "integration",
-        label: "The integration",
-        heading: "Listings, orders, inventory — one surface, many contracts",
+        id: "soap",
+        label: "The SOAP layer",
+        heading: "Listings, orders, inventory — one WSDL, many failure modes",
         body: [
-          "Each eBay subsystem has its own quirks. Listings expire. Orders arrive out of order. Inventory drifts if you blink. Building a durable integration means modeling every failure mode before it hits production.",
+          "Each Trading API call has its own quirks. AddItem and ReviseItem fail differently. GetOrders pages drift if you blink. Inventory updates race when two SOAP sessions touch the same SKU. Building a durable integration meant modeling every fault code and retry path before it hit production.",
         ],
       },
     ],
@@ -413,6 +520,48 @@ export const copy = {
   funLede:
     "Engineering is the day job, but I make time to ship products, write game loops, and build benches for people I love.",
 };
+
+export const stack = [
+  {
+    label: "Building with",
+    items: [
+      { name: "C#", href: "https://learn.microsoft.com/dotnet/csharp/" },
+      { name: ".NET", href: "https://dotnet.microsoft.com/" },
+      { name: "SQL", href: "https://learn.microsoft.com/sql/" },
+      { name: "TypeScript", href: "https://www.typescriptlang.org/" },
+      { name: "Next.js", href: "https://nextjs.org/" },
+      { name: "React", href: "https://react.dev/" },
+    ],
+  },
+  {
+    label: "Also",
+    items: [
+      { name: "JavaScript", href: "https://developer.mozilla.org/docs/Web/JavaScript" },
+      { name: "Python", href: "https://www.python.org/" },
+      { name: "Docker", href: "https://www.docker.com/" },
+      { name: "Unity", href: "https://unity.com/" },
+    ],
+  },
+  {
+    label: "CI/CD",
+    items: [
+      { name: "GitHub", href: "https://github.com/" },
+      { name: "Vercel", href: "https://vercel.com/" },
+      { name: "Supabase", href: "https://supabase.com/" },
+      { name: "TFS", href: "https://azure.microsoft.com/products/devops/" },
+      { name: "TeamCity", href: "https://www.jetbrains.com/teamcity/" },
+      { name: "Octopus", href: "https://octopus.com/" },
+    ],
+  },
+  {
+    label: "Agents",
+    items: [
+      { name: "Cursor", href: "https://cursor.com/" },
+      { name: "GitHub Copilot", href: "https://github.com/features/copilot" },
+      { name: "Claude Code", href: "https://code.claude.com/" },
+    ],
+  },
+] as const;
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
