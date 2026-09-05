@@ -9,15 +9,18 @@ import { workProjects } from "@/data/site";
 export default function WorkPage() {
   return (
     <div className="mx-auto w-full max-w-[1800px] px-6 pb-16">
-      <section className="grid w-full grid-cols-1 gap-12 pb-24 lg:grid-cols-2 lg:gap-12" style={{ paddingTop: "clamp(32px, 12vh, 180px)" }}>
+      <section className="grid w-full grid-cols-1 gap-8 pb-24 lg:grid-cols-2 lg:gap-12" style={{ paddingTop: "clamp(32px, 12vh, 180px)" }}>
         <OnekoPlayground />
         <div className="flex w-full flex-col gap-6">
           <h1 className="leading-[1.1] tracking-[-0.02em] text-foreground">
-            <span className="block sm:whitespace-nowrap" style={{ fontSize: "clamp(16px, 2vw, 40px)" }}>
+            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
               I&apos;m <NicoName />, a full-stack software engineer
             </span>
-            <span className="block" style={{ fontSize: "clamp(16px, 2vw, 40px)" }}>
-              who <span className="italic" data-easter="slab">loves UX</span>.
+            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
+              who <span className="italic" data-easter="slab">loves</span> UX,
+            </span>
+            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
+              and the systems behind it.
             </span>
           </h1>
           <ExperienceList className="mt-4" />

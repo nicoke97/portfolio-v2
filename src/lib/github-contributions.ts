@@ -2,7 +2,7 @@ import { setDefaultResultOrder } from "node:dns";
 
 import type { Activity } from "react-activity-calendar";
 
-import { githubCommitDays, site } from "@/data/site";
+import { ACTIVITY_START, githubCommitDays, site } from "@/data/site";
 
 setDefaultResultOrder("ipv4first");
 
@@ -74,10 +74,13 @@ function flatten(weeks: { contributionDays: Day[] }[]): Activity[] {
   );
 }
 
+function fromActivityStart(days: Activity[]): Activity[] {
+  return days.filter((day) => day.date >= ACTIVITY_START);
+}
+
 function emptyYear(): Activity[] {
   const end = new Date();
-  const start = new Date(end);
-  start.setFullYear(start.getFullYear() - 1);
+  const start = new Date(`${ACTIVITY_START}T00:00:00`);
 
   const days: Activity[] = [];
   const cursor = new Date(start);
@@ -132,11 +135,11 @@ async function fromGithub(token: string): Promise<GithubContributions | null> {
       signal: AbortSignal.timeout(FETCH_MS),
       headers: githubHeaders(token),
       body: JSON.stringify({
-        query: `query ($login: String!) {
+        query: `query ($login: String!, $from: DateTime!, $to: DateTime!) {
         viewer {
           id
           login
-          contributionsCollection {
+          contributionsCollection(from: $from, to: $to) {
             restrictedContributionsCount
             contributionCalendar {
               totalContributions
@@ -151,7 +154,7 @@ async function fromGithub(token: string): Promise<GithubContributions | null> {
           }
         }
         user(login: $login) {
-          contributionsCollection {
+          contributionsCollection(from: $from, to: $to) {
             restrictedContributionsCount
             contributionCalendar {
               totalContributions
@@ -166,7 +169,11 @@ async function fromGithub(token: string): Promise<GithubContributions | null> {
           }
         }
       }`,
-        variables: { login: site.githubUser },
+        variables: {
+          login: site.githubUser,
+          from: `${ACTIVITY_START}T00:00:00.000Z`,
+          to: new Date().toISOString(),
+        },
       }),
     });
   } catch {
@@ -180,9 +187,9 @@ async function fromGithub(token: string): Promise<GithubContributions | null> {
   const collection = isViewer ? viewer?.contributionsCollection : payload.data?.user?.contributionsCollection;
   if (!collection) return null;
 
-  const contributions = flatten(collection.contributionCalendar.weeks);
+  const contributions = fromActivityStart(flatten(collection.contributionCalendar.weeks));
   const commitDays = isViewer && viewer?.id ? await commitDaysFromRepos(token, viewer.id) : new Map<string, number>();
-  const merged = commitDays.size ? mergeDays(contributions, commitDays) : contributions;
+  const merged = fromActivityStart(commitDays.size ? mergeDays(contributions, commitDays) : contributions);
   const total = merged.reduce((sum, day) => sum + day.count, 0);
 
   return {
@@ -193,8 +200,7 @@ async function fromGithub(token: string): Promise<GithubContributions | null> {
 }
 
 async function commitDaysFromRepos(token: string, authorId: string): Promise<Map<string, number>> {
-  const since = new Date();
-  since.setFullYear(since.getFullYear() - 1);
+  const since = new Date(`${ACTIVITY_START}T00:00:00.000Z`);
 
   let response: Response;
   try {
@@ -267,13 +273,17 @@ async function fromPublic(): Promise<GithubContributions | null> {
 
   if (!payload.contributions?.length) return null;
 
-  return {
-    total: payload.total.lastYear ?? payload.contributions.reduce((sum, day) => sum + day.count, 0),
-    contributions: payload.contributions.map((day) => ({
+  const contributions = fromActivityStart(
+    payload.contributions.map((day) => ({
       date: day.date,
       count: day.count,
       level: Math.min(4, Math.max(0, day.level)) as Activity["level"],
     })),
+  );
+
+  return {
+    total: contributions.reduce((sum, day) => sum + day.count, 0),
+    contributions,
     includesPrivate: false,
   };
 }
@@ -287,18 +297,23 @@ export async function getGithubContributions(): Promise<GithubContributions> {
       return emptyGithubContributions();
     }
 
-    const known = new Map(Object.entries(githubCommitDays));
+    const known = new Map(Object.entries(githubCommitDays).filter(([date]) => date >= ACTIVITY_START));
     const knownTotal = [...known.values()].reduce((sum, count) => sum + count, 0);
+    const contributions = fromActivityStart(payload.contributions);
     if (knownTotal > payload.total) {
-      const contributions = mergeDays(payload.contributions, known);
+      const merged = fromActivityStart(mergeDays(contributions, known));
       return {
-        total: contributions.reduce((sum, day) => sum + day.count, 0),
-        contributions,
+        total: merged.reduce((sum, day) => sum + day.count, 0),
+        contributions: merged,
         includesPrivate: true,
       };
     }
 
-    return payload;
+    return {
+      ...payload,
+      contributions,
+      total: contributions.reduce((sum, day) => sum + day.count, 0),
+    };
   } catch {
     return emptyGithubContributions();
   }
