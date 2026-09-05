@@ -289,3 +289,12 @@ h4 {
   background: color-mix(in srgb, var(--primary) 28%, transparent);
   color: var(--foreground);
 }
+
+/* Photo grids: bottom-align the shorter photo in each 2-col mobile row
+   so all four central corners meet. Resets on desktop (lg+) where the
+   grid uses a single row with items-stretch. */
+@media (max-width: 1023.75px) {
+  [data-short] {
+    align-self: end;
+  }
+}
