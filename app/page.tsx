@@ -13,14 +13,14 @@ export default function WorkPage() {
         <OnekoPlayground />
         <div className="flex w-full flex-col gap-6">
           <h1 className="leading-[1.1] tracking-[-0.02em] text-foreground">
-            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
-              I&apos;m <NicoName />, a full-stack software engineer
+            <span className="inline lg:block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
+              I&apos;m <NicoName />, a full-stack software engineer{" "}
             </span>
-            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
-              who <span className="italic" data-easter="slab">loves</span> UX,
+            <span className="inline lg:block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
+              who <span className="italic" data-easter="slab">loves</span> UX.
             </span>
-            <span className="block" style={{ fontSize: "clamp(26px, 2.5vw, 40px)" }}>
-              and the systems behind it.
+            <span className="block mt-1" style={{ fontSize: "clamp(18px, 1.8vw, 28px)" }}>
+              (and the systems behind it)
             </span>
           </h1>
           <ExperienceList className="mt-4" />

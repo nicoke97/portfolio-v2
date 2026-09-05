@@ -8,6 +8,29 @@ function isUnoptimized(src: string) {
   return src.endsWith(".jfif") || src === "/portrait.png";
 }
 
+/** On mobile the grid is 2-col. In each pair (row), the photo with the
+ *  larger aspect ratio is shorter at equal column widths and should be
+ *  bottom-aligned so all four central corners meet.
+ *  Only applies to non-last rows — the last row has nothing below it,
+ *  so floating photos to the bottom there just creates ugly top gaps. */
+function isShorterInRow(
+  images: { width: number; height: number }[],
+  index: number,
+): boolean {
+  const totalRows = Math.ceil(images.length / 2);
+  const row = Math.floor(index / 2);
+  // Last row: leave both photos top-aligned
+  if (row >= totalRows - 1) return false;
+  const leftIdx = row * 2;
+  const rightIdx = leftIdx + 1;
+  if (rightIdx >= images.length) return false;
+  const leftRatio = images[leftIdx].width / images[leftIdx].height;
+  const rightRatio = images[rightIdx].width / images[rightIdx].height;
+  if (leftRatio > rightRatio) return index === leftIdx;
+  if (rightRatio > leftRatio) return index === rightIdx;
+  return false;
+}
+
 export default function AboutPage() {
   return (
     <div className="mx-auto w-full max-w-[1800px] px-6 pb-20">
@@ -45,10 +68,11 @@ export default function AboutPage() {
                   .join(" "),
               }}
             >
-              {persona.images.map((image) => (
+              {persona.images.map((image, index) => (
                 <div
                   key={image.src}
                   className="relative min-w-0 overflow-hidden"
+                  data-short={isShorterInRow(persona.images, index) || undefined}
                   style={{
                     aspectRatio: `${image.width} / ${image.height}`,
                     background: persona.tone,

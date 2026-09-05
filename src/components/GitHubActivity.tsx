@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityCalendar } from "react-activity-calendar";
 
 import {
@@ -19,6 +19,56 @@ const cursorLabels = {
   totalCount: "Local AI edits",
   legend: { less: "Less", more: "More" },
 };
+
+// Natural block size on GitHub's own calendar
+const BASE_BLOCK = 11;
+const BASE_MARGIN = 3;
+const BASE_FONT = 12;
+// Cap so blocks never get distractingly large
+const MAX_BLOCK = 14;
+
+function weekCount(data: { date: string }[]) {
+  if (data.length === 0) return 53;
+  const first = new Date(`${data[0].date}T00:00:00`);
+  const last = new Date(`${data[data.length - 1].date}T00:00:00`);
+  const pad = first.getDay();
+  const days = Math.round((last.getTime() - first.getTime()) / 86_400_000) + 1;
+  return Math.ceil((days + pad) / 7);
+}
+
+function fitCalendar(width: number, weeks: number) {
+  if (width <= 0 || weeks <= 0) {
+    return { blockSize: BASE_BLOCK, blockMargin: BASE_MARGIN, blockRadius: 2, fontSize: BASE_FONT };
+  }
+  const natural = weeks * (BASE_BLOCK + BASE_MARGIN) - BASE_MARGIN;
+  // Scale up to fill the container, but never exceed MAX_BLOCK
+  const scale = Math.min(width / natural, MAX_BLOCK / BASE_BLOCK);
+  const blockSize = BASE_BLOCK * scale;
+  const blockMargin = BASE_MARGIN * scale;
+  return {
+    blockSize,
+    blockMargin,
+    blockRadius: Math.max(2, blockSize * 0.18),
+    fontSize: Math.max(10, Math.round(BASE_FONT * Math.min(1.1, scale))),
+  };
+}
+
+function useFitCalendar(weeks: number) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState(() => fitCalendar(0, weeks));
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setFit(fitCalendar(el.clientWidth, weeks));
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    update();
+    return () => observer.disconnect();
+  }, [weeks]);
+
+  return { ref, ...fit };
+}
 
 function levelFor(count: number, max: number): 0 | 1 | 2 | 3 | 4 {
   if (count <= 0) return 0;
@@ -53,6 +103,8 @@ function seededGithub(): GithubContributions {
 
 export function GitHubActivity() {
   const [github, setGithub] = useState<GithubContributions>(seededGithub);
+  const weeks = Math.max(weekCount(github.contributions), weekCount(cursorContributionDays));
+  const { ref, blockSize, blockMargin, blockRadius, fontSize } = useFitCalendar(weeks);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,15 +144,15 @@ export function GitHubActivity() {
               contributions this year
             </span>
           </p>
-          <div className="overflow-x-auto">
+          <div ref={ref} className="overflow-x-auto">
             <ActivityCalendar
               data={github.contributions}
               colorScheme="light"
               theme={githubTheme}
-              blockSize={11}
-              blockMargin={3}
-              blockRadius={2}
-              fontSize={12}
+              blockSize={blockSize}
+              blockMargin={blockMargin}
+              blockRadius={blockRadius}
+              fontSize={fontSize}
               showTotalCount={false}
               showWeekdayLabels={false}
             />
@@ -127,10 +179,10 @@ export function GitHubActivity() {
               colorScheme="light"
               theme={cursorTheme}
               labels={cursorLabels}
-              blockSize={11}
-              blockMargin={3}
-              blockRadius={2}
-              fontSize={12}
+              blockSize={blockSize}
+              blockMargin={blockMargin}
+              blockRadius={blockRadius}
+              fontSize={fontSize}
               showTotalCount={false}
               showWeekdayLabels={false}
             />
