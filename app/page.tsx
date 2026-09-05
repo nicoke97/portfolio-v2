@@ -13,7 +13,7 @@ export default function WorkPage() {
         <OnekoPlayground />
         <div className="flex w-full flex-col gap-6">
           <h1 className="leading-[1.1] tracking-[-0.02em] text-foreground">
-            <span className="block whitespace-nowrap" style={{ fontSize: "clamp(16px, 2vw, 40px)" }}>
+            <span className="block sm:whitespace-nowrap" style={{ fontSize: "clamp(16px, 2vw, 40px)" }}>
               I&apos;m <NicoName />, a full-stack software engineer
             </span>
             <span className="block" style={{ fontSize: "clamp(16px, 2vw, 40px)" }}>
