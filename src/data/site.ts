@@ -8,7 +8,7 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/nicolas-kelley-sde97/",
   github: "https://github.com/nicoke97",
   githubUser: "nicoke97",
-  resumePath: "/Nicolas-Kelley-CV.pdf",
+  resumePath: "/Nicolas_Kelley_CV_engineer.pdf",
   avatar: "/portrait.png",
   languages: ["Spanish (Native)", "English (Native)", "Italian (Conversational)"],
   chatName: "NicoGPT",
@@ -20,40 +20,6 @@ export const cursorOranges = ["#eceae6", "#e8c4b0", "#d4926e", "#be704c", "#8f4a
 
 /** First day shown on both activity calendars. Nothing earlier is worth showing. */
 export const ACTIVITY_START = "2026-04-01";
-
-/** Authored commits on default branches, used when GitHub hides private activity. */
-export const githubCommitDays: Record<string, number> = {
-  "2026-05-06": 1,
-  "2026-05-09": 1,
-  "2026-05-11": 1,
-  "2026-05-14": 1,
-  "2026-05-16": 3,
-  "2026-05-17": 3,
-  "2026-05-18": 2,
-  "2026-05-19": 3,
-  "2026-05-20": 1,
-  "2026-05-21": 2,
-  "2026-05-22": 7,
-  "2026-05-23": 5,
-  "2026-05-28": 5,
-  "2026-05-29": 4,
-  "2026-05-30": 3,
-  "2026-06-02": 1,
-  "2026-06-03": 4,
-  "2026-06-04": 4,
-  "2026-06-18": 3,
-  "2026-06-20": 1,
-  "2026-06-21": 4,
-  "2026-06-22": 1,
-  "2026-06-23": 1,
-  "2026-06-25": 2,
-  "2026-06-26": 2,
-  "2026-08-31": 3,
-  "2026-09-01": 3,
-  "2026-09-02": 1,
-  "2026-09-03": 1,
-  "2026-09-04": 1,
-};
 
 export const cursorActivity = {
   lineEdits: 6_589_932,
@@ -176,6 +142,12 @@ export type Experience = {
 };
 
 export const experiences: Experience[] = [
+  {
+    year: "2026",
+    company: "SlabHQ (live)",
+    role: "Founder",
+    href: "https://www.slabhq.app",
+  },
   {
     year: "2025",
     company: "Solera Holdings",
@@ -351,9 +323,9 @@ export const projects: Project[] = [
     slug: "elink-ebay",
     name: "eLink × eBay",
     title: "eBay, from SOAP to REST",
-    eyebrow: "eLink • Solera",
+    eyebrow: "Solera • Shipped 2024",
     page: "work",
-    status: "Shipped",
+    status: "Shipped 2024",
     year: "2024",
     role: "Software Development Engineer I",
     timeline: "2023 — 2024",
@@ -403,9 +375,9 @@ export const projects: Project[] = [
     slug: "NetFramework-to-Core",
     name: "Platform Modernization",
     title: "Migrating .NET Framework to .NET Core",
-    eyebrow: "Solera • Handed off 2026",
+    eyebrow: "Solera • Shipped 2026",
     page: "work",
-    status: "Handed off 2026",
+    status: "Shipped 2026",
     year: "2026",
     role: "Software Development Engineer II",
     timeline: "2025 — 2026",
@@ -430,7 +402,7 @@ export const projects: Project[] = [
         "At Solera I led the migration from .NET Framework to .NET Core across a mesh of interconnected services (15 to be exact).",
         "At first, it looked like a compiler problem right up until the first shared package. Then it stopped being about syntax and turns into a graph problem: who consumes what, who is free to move first, and what still assumes the old runtime is going to be there forever.",
         "Framework and Core are not just two versions of the same thing. They differ in how they resolve dependencies, how they handle configuration, and which APIs even exist. Code that had run untouched for years suddenly surfaced assumptions nobody remembered making.",
-        "So yeah, the dependency graph was the real project, since most of the migration was handled using GitHub Copilot (shoutout to the real one). A service could only move once everything it depended on could run on Core too, and everything that depended on it needed to keep working while it made the jump.",
+        "So yeah, the dependency graph was the real project. A service could only move once everything it depended on could run on Core too, and everything that depended on it needed to keep working while it made the jump.",
         "So before touching code, we mapped it: which services shared packages, which packages had already been ported, which ones were dead weight nobody remembered using. That graph decided the migration order more than any technical merit did.",
         "After that we did a dual run, instead of flipping the switch, in an incremental way, for each service. At the end of the day, the migration succeeded because we treated compatibility as the thing to protect, and let the compiler follow.",
       ],
@@ -441,9 +413,9 @@ export const projects: Project[] = [
     slug: "TFS-migration-GH",
     name: "TFS → GitHub",
     title: "Migrating TFS to GitHub",
-    eyebrow: "Solera • Handed off 2026",
+    eyebrow: "Solera • Shipped 2026",
     page: "work",
-    status: "Handed off 2026",
+    status: "Shipped 2026",
     year: "2026",
     role: "Software Development Engineer II",
     timeline: "2025 — 2026",
@@ -726,7 +698,7 @@ export const about = {
 };
 
 export const copy = {
-  workHeadline: "I'm Nico, a full-stack software engineer who loves UX.",
+  workHeadline: "Software Engineer · C# / .NET · marketplaces and system migrations.",
   funHeadline: "I live for creating",
   funLede:
     "Engineering is the day job. After hours I build the tools I wish existed.",
